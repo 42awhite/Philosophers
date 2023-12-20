@@ -1,20 +1,18 @@
-//f time_stamp
-//f time diff
-//Estructuras
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
+/*   Updated: 2023/12/20 21:48:02 by ablanco-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "philo.h"
 
-long get_time(void)
-{
-	struct timeval start_time;
-	long ms;
-
-	gettimeofday(&start_time, NULL);
-	ms = (start_time.tv_sec * 1000) + (start_time.tv_usec / 1000);
-	//printf("seg = %ld microseg = %d \n", start_time.tv_sec, start_time.tv_usec);
-	//printf("miliseg = %ld\n", ms);
-	return(ms);
-}
 void ft_sleep(long ms)
 {
 	long	start;
@@ -29,15 +27,12 @@ void ft_sleep(long ms)
 	
 }
 
-long dif_time(long start, long now)
-{
-	return (now - start);
-}
+void start_phylo()
 
 int main(void)
 {
 	long start;
-
+	
 	start = get_time();
 	ft_sleep(2000);
 	printf("dif = %ld\n", dif_time(start, get_time()));
