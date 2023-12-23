@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2023/12/22 13:20:22 by pc               ###   ########.fr       */
+/*   Updated: 2023/12/23 22:03:16 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void do_fork(t_info info)
 	//int *fork;
 	
 	idx = 0;
-	printf("entra con %d philos a hacer tenedores\n", info.n_philo);
+	printf("entra con %ld philos a hacer tenedores\n", info.n_philo);
 	while(info.n_philo > idx)
 	{
 		info.forks[idx] = 0;
@@ -42,15 +42,39 @@ void do_fork(t_info info)
 	}
 }
 
-int main(void)
+int parse(int argc, char **argv)
+{
+	int idx;
+	int idx_str;
+
+	idx = 1;
+	if (argc <= 4 || argc > 6)
+		return(ft_perror("n de arg incorrecto"));
+	while (idx < argc)
+	{
+		idx_str = 0;
+		while (argv[idx][idx_str])
+		{
+			if (argv[idx][idx_str] <= '0' || argv[idx][idx_str] > '9')
+				return(ft_perror("invalid argument"));
+			idx_str++;
+		}
+		idx++;
+	}
+	return(0);
+}
+
+int main(int argc, char **argv)
 {
 	t_info info;
 	long start;
 	
+	if (parse(argc, argv) == -1)
+		return(0);
 	start = get_time();
 	ft_sleep(5);
 	printf("dif = %ld\n", dif_time(start, get_time()));
 	info.n_philo = 5;
-	printf("n philos = %d\n", info.n_philo);
+	printf("n philos = %ld\n", info.n_philo);
 	do_fork(info);
 }
