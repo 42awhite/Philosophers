@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 21:06:40 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/02 20:48:26 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/04 17:05:05 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,19 @@ int	ft_atoi(const char *str)
 		return (-1);
 	return (dest * neg);
 }
+
+void	*ft_bzero(void *s, size_t n)
+{
+	size_t	q;
+	char	*str;
+
+	str = s;
+	q = 0;
+	while (q < n)
+	{
+		str[q] = '\0';
+		q++;
+	}
+	return (str);
+}
+

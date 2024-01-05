@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+         #
+#    By: pc <pc@student.42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/23 21:06:44 by ablanco-          #+#    #+#              #
-#    Updated: 2024/01/02 21:18:39 by ablanco-         ###   ########.fr        #
+#    Updated: 2024/01/04 17:35:14 by pc               ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME = philo
 
-SRC = main.c time.c utils.c
+SRC = main.c time.c utils.c parse.c
 
 OBJS = ${SRC:.c=.o}
 
