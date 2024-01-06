@@ -34,6 +34,7 @@ int		save_arg(char **argv, int argc, t_info *info)
 		return(ft_perror("atoi error"));
 	if (info->n_philo > 200)
 		return(ft_perror("no caben tantos filósofos en la mesa"));
+	info->n_meal = -1;
 	if (argc == 6)
 	{
 		info->n_meal = ft_atoi(argv[5]);

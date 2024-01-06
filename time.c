@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/04 17:26:49 by pc               ###   ########.fr       */
+/*   Updated: 2024/01/06 18:55:41 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ void ft_sleep(long ms)
 	}
 }
 
-int get_time(void)
+long get_time()
 {
 	struct timeval	start_time;
-	int				ms;
+	long				ms;
 
 	gettimeofday(&start_time, NULL);
 	ms = (start_time.tv_sec * 1000) + (start_time.tv_usec / 1000);
+	printf("tiempo en get_time = %ld\n", ms);
 	return(ms);
 }
 
