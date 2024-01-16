@@ -3,83 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/06 19:49:03 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/16 19:23:46 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
-/*version mutex
-int do_fork(t_info *info)
-{
-	int idx;
-	//int *fork;
-	
-	idx = 0;
-	printf("entra con %d philos a hacer tenedores\n", info->n_philo);
-	while(info->n_philo > idx)
-	{
-		//info->forks[idx] = 0;
-		//printf("fork n [%d] = %d\n", idx, info->forks[idx]); 
-		if (pthread_mutex_init(&info->forks[idx], NULL) != 0)
-			return(ft_perror("fork error"));
-		idx ++;
-	}
-	return (0);
-	//printf("fork n [%d] = %d\n", idx, info->forks[idx+1]); 
-}
-*/
+pthread_mutex_t mutex;
 
-//Version int 
-void do_fork(t_info *info)
+void *write_hilo(void *argv)
 {
-	int idx;
+	int i = 0;
+	int c = 0;
 	
-	idx = 0;
-	printf("entra con %d philos a hacer tenedores\n", info->n_philo);
-	info->forks = (int *)malloc(info->n_philo * sizeof(int));
-	while(info->n_philo > idx)
+	while (i < 2)
 	{
-		info->forks[idx] = 0;
-	//	printf("fork n [%d] = %d\n", idx, info->forks[idx]); 
-		idx ++;
+	pthread_mutex_lock(&mutex);
+	c++;
+	printf("Hilo con dni = %d n aumenta c a = %d\n", *((int *)argv), c);
+	sleep(3);
+	pthread_mutex_unlock(&mutex);
+	i++;
 	}
-	
-	//return (0);
-	//printf("fork n [%d] = %d\n", idx, info->forks[idx+1]); 
-}
-
-void do_philos(t_phylo *philos, t_info *info)
-{
-	int idx;
-
-	idx = 0;
-	printf("n philos = %d\n", info->n_philo);
-	philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
-	while (idx < info->n_philo)
-	{
-		philos[idx].dni = idx + 1;		
-		philos[idx].fork_l = idx;
-		if (idx == (info->n_philo - 1))
-			philos[idx].fork_r = 0;
-		else
-			philos[idx].fork_r = idx + 1;	
-	//	printf("dni philos en pos %d = %d\n", idx, philos[idx].dni);
-		idx++;
-	}
-//	int n = 0;
-//	printf("El philo con dni %d tiene fork l = %d y fork r %d\n", philos[n].dni, philos[n].fork_l, philos[n].fork_r);
-	free(philos);
+	return NULL;
 }
 
 int main(int argc, char **argv)
 {
 	t_info info;
-	t_phylo philos;
+	t_phylo *philos;
+	int idx = 0;
 	
 	if (parse(argc, argv) == -1)
 		return(0);
@@ -89,9 +46,35 @@ int main(int argc, char **argv)
 	do_fork(&info);
 	do_philos(&philos, &info);
 	info.start = get_time();
-	printf("Start = %ld\n", info.start);
-	//ft_sleep(5);
 	
+	if (pthread_mutex_init(&mutex, NULL) != 0) 
+	{
+        fprintf(stderr, "Error al inicializar el mutex\n");
+        return 1;
+    }
+	while (idx < info.n_philo)
+	{
+		printf("TU ERE %d\n", philos[idx].dni);
+		if (pthread_create(&philos[idx].hilo, NULL, write_hilo, &philos[idx].dni) != 0) 
+		{
+			fprintf(stderr, "Error al crear el hilo\n");
+			return 1;
+		}
+		idx++;
+	}
+	
+	// Esperar a que el hilo termine (opcional)
+	idx = 0;
+	while (idx < info.n_philo)
+	{
+    	if (pthread_join(philos[idx].hilo, NULL) != 0) 
+		{
+    		fprintf(stderr, "Error al esperar al hilo\n");
+    		return 1;
+		}
+		idx++;
+	}
+	//printf("Start = %ld\n", info.start);
 	//printf("dif = %d\n", dif_time(start, get_time()));
 	//printf("n philos = %d\n", info.n_philo);
 	//printf("n t_die = %d\n", info.t_die);
@@ -99,4 +82,8 @@ int main(int argc, char **argv)
 	//printf("n t_sleep = %d\n", info.t_sleep);
 	//printf("n n_meal = %d\n", info.n_meal);
 }
-//CHECKEAR hacer free a los philos y a los tenedores. 
+
+//CHECKEAR hacer free a: 
+//los philos 
+//los tenedores. 
+//los mutex

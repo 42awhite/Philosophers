@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/06 18:55:41 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/07 19:56:59 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,13 @@ long get_time()
 
 	gettimeofday(&start_time, NULL);
 	ms = (start_time.tv_sec * 1000) + (start_time.tv_usec / 1000);
-	printf("tiempo en get_time = %ld\n", ms);
 	return(ms);
 }
 
-int dif_time(int start, int now)
+long dif_time(t_info *info)
 {
-	return (now - start);
+	long	now;
+
+	now = get_time();
+	return (now - info->start);
 }
