@@ -50,16 +50,16 @@ void do_philos(t_phylo **philos, t_info *info)
 	*philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
 	while (idx < info->n_philo)
 	{
-		philos[idx]->dni = idx + 1;		
-		philos[idx]->fork_l = idx;
+		(*philos)[idx].dni = idx + 1;		
+		(*philos)[idx].fork_l = idx;
 		if (idx == (info->n_philo - 1))
-			philos[idx]->fork_r = 0;
+			(*philos)[idx].fork_r = 0;
 		else
-			philos[idx]->fork_r = idx + 1;	
-		printf("dni philos en pos %d = %d\n", idx, philos[idx]->dni);
+			(*philos)[idx].fork_r = idx + 1;	
+		printf("dni philos en pos %d = %d\n", idx, (*philos)[idx].dni);
 		idx++;
 	}
 //	int n = 0;
 //	printf("El philo con dni %d tiene fork l = %d y fork r %d\n", philos[n].dni, philos[n].fork_l, philos[n].fork_r);
-	free(philos);
+	//free(philos);
 }
