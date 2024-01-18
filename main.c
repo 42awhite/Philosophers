@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/17 21:37:57 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/18 21:17:37 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,31 @@
 
 pthread_mutex_t mutex;
 
+void	print_message(char *str, t_phylo *philo, t_info *info)
+{
+	pthread_mutex_lock(&mutex);
+	printf("%ld %d %s\n", dif_time(info), philo->dni, str);
+	pthread_mutex_unlock(&mutex);
+	
+}
+
 void *write_hilo(void *argv)
 {
 	int i = 0;
 	int c = 0;
+	t_phylo *philos;
+
+	philos = (t_phylo *)argv;
 	
 	while (i < 2)
 	{
-	pthread_mutex_lock(&mutex);
-	c++;
-	printf("Hilo con dni = %d n aumenta c a = %d\n", *((int *)argv), c);
-	sleep(3);
-	pthread_mutex_unlock(&mutex);
-	i++;
+		pthread_mutex_lock(&mutex);
+		c++;
+		//printf("Hilo con dni = %d n aumenta c a = %d\n", *((int *)argv), c);
+		printf("Hilo con dni = %d n aumenta c a = %d\n", philos->dni, c);
+		sleep(3);
+		pthread_mutex_unlock(&mutex);
+		i++;
 	}
 	return NULL;
 }
@@ -36,6 +48,7 @@ int main(int argc, char **argv)
 {
 	t_info info;
 	t_phylo *philos;
+	void *single_philo;
 	int idx = 0;
 	
 	if (parse(argc, argv) == -1)
@@ -52,18 +65,22 @@ int main(int argc, char **argv)
         fprintf(stderr, "Error al inicializar el mutex\n");
         return 1;
     }
+	
+	//TRATANDO DE PASAR PHILOS A VOIS Y LUEGO VOLVER A PASARO A T_PHILOS
 	while (idx < info.n_philo)
 	{
-		printf("TU ERE %d\n", philos[idx].dni);
-		if (pthread_create(&philos[idx].hilo, NULL, write_hilo, &philos[idx].dni) != 0) 
+		single_philo = (void *)&philos[idx];
+	//	printf("TU ERE %d\n", philos[idx].dni);
+		if (pthread_create(&philos[idx].hilo, NULL, write_hilo, &single_philo) != 0) 
 		{
 			fprintf(stderr, "Error al crear el hilo\n");
 			return 1;
 		}
+		print_message("esta durmiendo", &philos[idx], &info);
 		idx++;
 	}
 	
-	// Esperar a que el hilo termine (opcional)
+	// Esperar a que el hilo termine
 	idx = 0;
 	while (idx < info.n_philo)
 	{
@@ -74,13 +91,6 @@ int main(int argc, char **argv)
 		}
 		idx++;
 	}
-	//printf("Start = %ld\n", info.start);
-	//printf("dif = %d\n", dif_time(start, get_time()));
-	//printf("n philos = %d\n", info.n_philo);
-	//printf("n t_die = %d\n", info.t_die);
-	//printf("n t_eat = %d\n", info.t_eat);
-	//printf("n t_sleep = %d\n", info.t_sleep);
-	//printf("n n_meal = %d\n", info.n_meal);
 }
 
 //CHECKEAR hacer free a: 

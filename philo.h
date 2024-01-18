@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/17 21:38:46 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:26:30 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_phylo
 	int dni;
 	int fork_r;
 	int fork_l;
-	//pthread_mutex_t mutex;
+	pthread_mutex_t mutex;
 
 	
 	t_info *info;
