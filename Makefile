@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pc <pc@student.42.fr>                      +#+  +:+       +#+         #
+#    By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/23 21:06:44 by ablanco-          #+#    #+#              #
-#    Updated: 2024/01/16 19:09:34 by pc               ###   ########.fr        #
+#    Updated: 2024/01/21 21:32:28 by ablanco-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC = main.c time.c utils.c parse.c init.c
 OBJS = ${SRC:.c=.o}
 
 CC = gcc
-CFLAGS = -Wall -Wextra  -g3 -fsanitize=address #-Werror
+CFLAGS = -Wall -Wextra  #-g3 -fsanitize=address #-Werror
 
 RM = rm -rf
 

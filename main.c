@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/18 21:17:37 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/21 21:37:32 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,34 @@ void	print_message(char *str, t_phylo *philo, t_info *info)
 void *write_hilo(void *argv)
 {
 	int i = 0;
-	int c = 0;
+	// int c = 0;
 	t_phylo *philos;
 
 	philos = (t_phylo *)argv;
 	
-	while (i < 2)
+	while (i < 10)
 	{
-		pthread_mutex_lock(&mutex);
-		c++;
-		//printf("Hilo con dni = %d n aumenta c a = %d\n", *((int *)argv), c);
-		printf("Hilo con dni = %d n aumenta c a = %d\n", philos->dni, c);
-		sleep(3);
-		pthread_mutex_unlock(&mutex);
+		printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
+		pthread_mutex_lock(philos->info->mutex + (philos->dni % 2));
+		printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
+		printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
+		pthread_mutex_lock(philos->info->mutex + ((philos->dni + 1 ) % 2));
+		printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
+		sleep(1);
+		printf("Soy el filósofo %d y voy a soltar los tenedores\n", philos->dni);
+		pthread_mutex_unlock(philos->info->mutex + ((philos->dni + 1 ) % 2));
+		pthread_mutex_unlock(philos->info->mutex + (philos->dni % 2));
 		i++;
+		sleep(1);
+
+		// pthread_mutex_lock(&mutex);
+		// c++;
+		// //printf("\tFROM THREAD -> %p\n", philos);
+		// //printf("Hilo con dni = %d n aumenta c a = %d\n", *((int *)argv), c);
+		// printf("Hilo con dni = %d n aumenta c a = %d\n", philos->dni, c);
+		// sleep(3);
+		// pthread_mutex_unlock(&mutex);
+		// i++;
 	}
 	return NULL;
 }
@@ -71,7 +85,7 @@ int main(int argc, char **argv)
 	{
 		single_philo = (void *)&philos[idx];
 	//	printf("TU ERE %d\n", philos[idx].dni);
-		if (pthread_create(&philos[idx].hilo, NULL, write_hilo, &single_philo) != 0) 
+		if (pthread_create(&philos[idx].hilo, NULL, write_hilo, single_philo) != 0) 
 		{
 			fprintf(stderr, "Error al crear el hilo\n");
 			return 1;

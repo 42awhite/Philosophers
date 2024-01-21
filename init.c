@@ -48,14 +48,22 @@ void do_philos(t_phylo **philos, t_info *info)
 	idx = 0;
 	printf("n philos = %d\n", info->n_philo);
 	*philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
+
+	// TODO: relocate
+	info->mutex = (pthread_mutex_t *)malloc(info->n_philo * sizeof(pthread_mutex_t));
 	while (idx < info->n_philo)
 	{
+		//printf("\tFROM ALLOCATOR -> %p\n", (*philos) + idx);
 		(*philos)[idx].dni = idx + 1;		
 		(*philos)[idx].fork_l = idx;
 		if (idx == (info->n_philo - 1))
 			(*philos)[idx].fork_r = 0;
 		else
 			(*philos)[idx].fork_r = idx + 1;	
+		(*philos)[idx].info = info;
+		// TODO: relocate
+		if (pthread_mutex_init(info->mutex + idx, NULL))
+			exit(1);
 		printf("dni philos en pos %d = %d\n", idx, (*philos)[idx].dni);
 		idx++;
 	}
