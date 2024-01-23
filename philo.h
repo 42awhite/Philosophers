@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/21 21:01:01 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:21:34 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		parse(int argc, char **argv);
 int		save_arg(char **argv, int argc, t_info *info);
 //Init
 void	do_fork(t_info *info);
-void	do_philos(t_phylo **philos, t_info *info);
+int		do_philos(t_phylo **philos, t_info *info);
 
 
 #endif

@@ -6,20 +6,20 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/21 21:37:32 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:59:45 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
-pthread_mutex_t mutex;
+//pthread_mutex_t mutex;
 
 void	print_message(char *str, t_phylo *philo, t_info *info)
 {
-	pthread_mutex_lock(&mutex);
+	//pthread_mutex_lock(&mutex);
 	printf("%ld %d %s\n", dif_time(info), philo->dni, str);
-	pthread_mutex_unlock(&mutex);
+	//pthread_mutex_unlock(&mutex);
 	
 }
 
@@ -31,20 +31,32 @@ void *write_hilo(void *argv)
 
 	philos = (t_phylo *)argv;
 	
-	while (i < 10)
-	{
-		printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
-		pthread_mutex_lock(philos->info->mutex + (philos->dni % 2));
-		printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
-		printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
-		pthread_mutex_lock(philos->info->mutex + ((philos->dni + 1 ) % 2));
-		printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
-		sleep(1);
-		printf("Soy el filósofo %d y voy a soltar los tenedores\n", philos->dni);
-		pthread_mutex_unlock(philos->info->mutex + ((philos->dni + 1 ) % 2));
-		pthread_mutex_unlock(philos->info->mutex + (philos->dni % 2));
-		i++;
-		sleep(1);
+	printf("Acceder a info n philo good %d\n", philos->info->n_philo);
+	pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
+	if (philos->info->forks[philos->fork_r] == 0)
+		philos->info->forks[philos->fork_r] = 1;
+	pthread_mutex_unlock(&philos->info->mutex[philos->fork_r]);
+	//PONER EL TIEMPO AQUI Y LUEGO QUE LOS SUELTE PASADO ESE TIEMPO
+	pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
+	if (philos->info->forks[philos->fork_l] == 0)
+		philos->info->forks[philos->fork_l] = 1;
+	pthread_mutex_unlock(&philos->info->mutex[philos->fork_l]);
+	
+	//while (i < 10)
+	//{
+		//AYUDA DE V
+		//printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
+		//pthread_mutex_lock(philos->info->mutex + (philos->dni % 2));
+		//printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + (philos->dni % 2));
+		//printf("Soy el filósofo %d y voy a coger el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
+		//pthread_mutex_lock(philos->info->mutex + ((philos->dni + 1 ) % 2));
+		//printf("Soy el filósofo %d y he cogido el fork %p\n", philos->dni, philos->info->mutex + ((philos->dni + 1 ) % 2));
+		//sleep(1);
+		//printf("Soy el filósofo %d y voy a soltar los tenedores\n", philos->dni);
+		//pthread_mutex_unlock(philos->info->mutex + ((philos->dni + 1 ) % 2));
+		//pthread_mutex_unlock(philos->info->mutex + (philos->dni % 2));
+		//i++;
+		//sleep(1);
 
 		// pthread_mutex_lock(&mutex);
 		// c++;
@@ -54,7 +66,7 @@ void *write_hilo(void *argv)
 		// sleep(3);
 		// pthread_mutex_unlock(&mutex);
 		// i++;
-	}
+	//}
 	return NULL;
 }
 
@@ -68,17 +80,19 @@ int main(int argc, char **argv)
 	if (parse(argc, argv) == -1)
 		return(0);
 	if (save_arg(argv, argc, &info) == -1)
-		return (0);
-	
+		return(0);
 	do_fork(&info);
-	do_philos(&philos, &info);
+	if (do_philos(&philos, &info) == -1)
+		return(0);
+	
 	info.start = get_time();
 	
-	if (pthread_mutex_init(&mutex, NULL) != 0) 
-	{
-        fprintf(stderr, "Error al inicializar el mutex\n");
-        return 1;
-    }
+	//BORRAR SI EL MUTEZ DE LA ESTRUCTURA FUNCIONA
+	//if (pthread_mutex_init(&mutex, NULL) != 0) 
+	//{
+    //    fprintf(stderr, "Error al inicializar el mutex\n");
+    //    return 1;
+    //}
 	
 	//TRATANDO DE PASAR PHILOS A VOIS Y LUEGO VOLVER A PASARO A T_PHILOS
 	while (idx < info.n_philo)
@@ -90,7 +104,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "Error al crear el hilo\n");
 			return 1;
 		}
-		print_message("esta durmiendo", &philos[idx], &info);
+		///print_message("esta durmiendo", &philos[idx], &info);
 		idx++;
 	}
 	
