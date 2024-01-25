@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/07 19:56:59 by pc               ###   ########.fr       */
+/*   Updated: 2024/01/25 21:26:30 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void ft_sleep(long ms)
 {
 	long	start;
 	long	finish;
+	
 	start = get_time();
 	finish = start + ms;
 	while (start < finish)

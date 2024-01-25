@@ -48,7 +48,6 @@ int	do_philos(t_phylo **philos, t_info *info)
 	idx = 0;
 	printf("n philos = %d\n", info->n_philo);
 	*philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
-	//BERIRIFAR QUE LA COMPROBACIÓN ESTÁ CORRECTA ASÍ SIENDO *PHILOS
 	if (!*philos)
 		ft_perror("Error, philos can't born");
 	// TODO: relocate

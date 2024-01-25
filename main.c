@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/23 22:59:45 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/25 21:52:12 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 
 //pthread_mutex_t mutex;
 
-void	print_message(char *str, t_phylo *philo, t_info *info)
+void	print_message(char *str, t_phylo *philo)
 {
 	//pthread_mutex_lock(&mutex);
-	printf("%ld %d %s\n", dif_time(info), philo->dni, str);
+	printf("%ld %d %s\n", dif_time(philo->info), philo->dni, str);
 	//pthread_mutex_unlock(&mutex);
 	
 }
@@ -31,16 +31,29 @@ void *write_hilo(void *argv)
 
 	philos = (t_phylo *)argv;
 	
-	printf("Acceder a info n philo good %d\n", philos->info->n_philo);
-	pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
-	if (philos->info->forks[philos->fork_r] == 0)
+	//MIRAR POR QUÉ COMEN A LA VEZ 2 PHILOS
+	if (philos->info->forks[philos->fork_r] == 0 && philos->info->forks[philos->fork_l] == 0)
+	{
+		//Coger tedenedores
+		pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
 		philos->info->forks[philos->fork_r] = 1;
-	pthread_mutex_unlock(&philos->info->mutex[philos->fork_r]);
-	//PONER EL TIEMPO AQUI Y LUEGO QUE LOS SUELTE PASADO ESE TIEMPO
-	pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
-	if (philos->info->forks[philos->fork_l] == 0)
+		pthread_mutex_unlock(&philos->info->mutex[philos->fork_r]);
+		print_message("has taken a fork\n", philos);
+		pthread_mutex_lock(&philos->info->mutex[philos->fork_l]);
 		philos->info->forks[philos->fork_l] = 1;
-	pthread_mutex_unlock(&philos->info->mutex[philos->fork_l]);
+		pthread_mutex_unlock(&philos->info->mutex[philos->fork_l]);
+		print_message("has taken a fork\n", philos);
+		//Tiempo de comida
+		usleep(philos->info->t_eat * 1000);
+		print_message("is eating\n", philos);
+		//Dejar tenedores
+		pthread_mutex_lock(&philos->info->mutex[philos->fork_r]);
+		philos->info->forks[philos->fork_r] = 0;
+		pthread_mutex_unlock(&philos->info->mutex[philos->fork_r]);
+		pthread_mutex_lock(&philos->info->mutex[philos->fork_l]);
+		philos->info->forks[philos->fork_l] = 0;
+		pthread_mutex_unlock(&philos->info->mutex[philos->fork_l]);		
+	}
 	
 	//while (i < 10)
 	//{
