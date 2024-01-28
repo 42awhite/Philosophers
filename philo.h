@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/26 18:43:19 by pc               ###   ########.fr       */
+/*   Updated: 2024/01/28 21:15:42 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 typedef struct s_info
 {
 	int		n_philo;
-	int		t_die;
-	int		t_eat; 
-	int		t_sleep;
+	long	t_die;
+	long		t_eat; 
+	long		t_sleep;
 	int		n_meal; 
 	int		*forks;
 	long	start; 
@@ -38,6 +38,7 @@ typedef struct s_phylo
 	int fork_r;
 	int fork_l;
 	long	t_last_eat;
+	int 	death;
 	
 	
 	t_info *info;
@@ -52,6 +53,7 @@ void	ft_sleep(long ms);
 int 	ft_perror(char *str);
 int		ft_atoi(const char *str);
 void	*ft_bzero(void *s, size_t n);
+void	print_message(char *str, t_phylo *philo);
 // Parseo
 int		parse(int argc, char **argv);
 int		save_arg(char **argv, int argc, t_info *info);

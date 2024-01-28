@@ -3,21 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/26 18:44:22 by pc               ###   ########.fr       */
+/*   Updated: 2024/01/28 21:28:07 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
-void	print_message(char *str, t_phylo *philo)
+void	check_death(t_phylo *philo)
 {
-	//pthread_mutex_lock(&mutex);
-	printf("%ld %d %s\n", dif_time(philo->info), philo->dni, str);
-	//pthread_mutex_unlock(&mutex);
+	long	t_since_eat;
+	//printf("hora desde la ultima vez que comió%ld\n", philo->t_last_eat);
+	t_since_eat = philo->t_last_eat - philo->info->start;
+	
+	if (t_since_eat >= philo->info->t_die)
+		philo->death = 1;
 }
 
 void	eat(t_phylo *philo)
@@ -34,9 +37,9 @@ void	eat(t_phylo *philo)
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
 		print_message("has taken a fork\n", philo);
 		//Tiempo de comida
-		philo->t_last_eat = 0;
-		usleep(philo->info->t_eat * 1000);
+		philo->t_last_eat = dif_time(philo->info);
 		print_message("is eating\n", philo);
+		ft_sleep(philo->info->t_eat);
 		//Dejar tenedores
 		pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
 		philo->info->forks[philo->fork_r] = 0;
@@ -54,8 +57,7 @@ void	eat(t_phylo *philo)
 
 void *rutine(void *argv)
 {
-	int i = 0;
-	// int c = 0;
+	//int i = 0;
 	t_phylo *philo;
 
 	philo = (t_phylo *)argv;
@@ -81,17 +83,21 @@ int main(int argc, char **argv)
 	
 	info.start = get_time();
 	
-	while (idx < info.n_philo)
+	while (philos[idx].death == 0)
 	{
 		single_philo = (void *)&philos[idx];
 	//	printf("TU ERE %d\n", philos[idx].dni);
+		check_death(&philos[idx]);
 		if (pthread_create(&philos[idx].hilo, NULL, rutine, single_philo) != 0) 
 		{
 			fprintf(stderr, "Error al crear el hilo\n");
 			return 1;
 		}
 		///print_message("esta durmiendo", &philos[idx], &info);
-		idx++;
+		if (idx == info.n_philo - 1)
+			idx = 0;
+		else
+			idx++;
 	}
 	
 	// Esperar a que el hilo termine
