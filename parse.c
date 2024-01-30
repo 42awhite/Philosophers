@@ -30,6 +30,7 @@ int		save_arg(char **argv, int argc, t_info *info)
 	info->t_die = ft_atoi(argv[2]);
 	info->t_eat = ft_atoi(argv[3]);
 	info->t_sleep = ft_atoi(argv[4]);
+	info->death = 0;
 	if (info->n_philo == -1 || info->t_die == -1 || info->t_eat == -1 || info->t_sleep == -1)
 		return(ft_perror("atoi error"));
 	if (info->n_philo > 200)

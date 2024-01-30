@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/28 21:15:42 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/30 18:40:05 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_info
 	int		n_meal; 
 	int		*forks;
 	long	start; 
+	int 	death;
 	pthread_mutex_t *mutex;
 }	t_info;
 
@@ -38,7 +39,6 @@ typedef struct s_phylo
 	int fork_r;
 	int fork_l;
 	long	t_last_eat;
-	int 	death;
 	
 	
 	t_info *info;
