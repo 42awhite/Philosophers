@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/31 20:55:14 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/31 20:57:30 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	check_death(t_phylo *philo, t_info *info)
 		if (t_since_eat >= info->t_die)
 		{
 			philo[idx].info->death = 1;
-			printf("HA MUERTO %d\n", philo[idx].dni);
+			print_message("is dead", &philo[idx]);
 			return ;
 		}
 		idx++;
@@ -45,13 +45,13 @@ void	eat(t_phylo *philo)
 		//Coger tedenedores
 		philo->info->forks[philo->fork_r] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
-		//print_message("has taken a fork", philo);
+		print_message("has taken a fork", philo);
 		philo->info->forks[philo->fork_l] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
-		//print_message("has taken a fork", philo);
+		print_message("has taken a fork", philo);
 		//Tiempo de comida
 		philo->t_last_eat = get_time(philo->info);
-		//print_message("is eating", philo);
+		print_message("is eating", philo);
 		ft_sleep(philo->info->t_eat);
 		
 		//Dejar tenedores
