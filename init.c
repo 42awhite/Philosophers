@@ -58,7 +58,8 @@ int	do_philos(t_phylo **philos, t_info *info)
 	{
 		//printf("\tFROM ALLOCATOR -> %p\n", (*philos) + idx);
 		(*philos)[idx].dni = idx + 1;
-		(*philos)[idx].t_last_eat = 0;
+		(*philos)[idx].t_last_eat = get_time();
+		(*philos)[idx].think = 0;
 		//(*philos)[idx].death = 0;
 		(*philos)[idx].fork_l = idx;
 		if (idx == (info->n_philo - 1))

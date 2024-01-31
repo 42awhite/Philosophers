@@ -6,59 +6,33 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/30 22:14:20 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/01/31 20:55:14 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
-void    ft_putnbr_fd(int n, int fd)
-{
-        char    number;
-
-        if (n == -2147483648)
-        {
-                write(fd, "-2147483648", 11);
-                return ;
-        }
-        if (n < 0)
-        {
-                write(fd, "-", 1);
-                n *= -1;
-        }
-        if (n <= 9)
-        {
-                number = n + '0';
-                write(fd, &number, 1);
-        }
-        if (n >= 10)
-        {
-                ft_putnbr_fd(n / 10, fd);
-                ft_putnbr_fd(n % 10, fd);
-        }
-}
 
 void	check_death(t_phylo *philo, t_info *info)
 {
 	long	t_since_eat = 0;
 	int		idx = 0;
 	//printf("hora desde la ultima vez que comió%ld\n", philo->t_last_eat);
-	while (idx < 50)
+	while (1)
 	{
-		print_message("qué filo eres", &philo[idx]);
+		//print_message("qué filo eres", &philo[idx]);
+		if (idx == info->n_philo)
+			idx = 0;
 		t_since_eat = philo[idx].t_last_eat - info->start;
-		printf("hora de la ultima comida = %ld, hora de start = %ld, diferencia = %ld\n", philo->t_last_eat, philo->info->start, t_since_eat);
+		//printf("DNI = %d, hora de la ultima comida = %ld, hora de start = %ld, diferencia = %ld\n", philo[idx].dni, philo[idx].t_last_eat, philo[idx].info->start, t_since_eat);
 		if (t_since_eat >= info->t_die)
 		{
-			philo->info->death = 1;
-			printf("HA MUERTO %d\n", philo->info->death);
+			philo[idx].info->death = 1;
+			printf("HA MUERTO %d\n", philo[idx].dni);
 			return ;
 		}
-		if (idx == info->n_philo - 1)
-			idx = 0;
-		else
-			idx++;
+		idx++;
 	}
 }
 
@@ -71,27 +45,38 @@ void	eat(t_phylo *philo)
 		//Coger tedenedores
 		philo->info->forks[philo->fork_r] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
-		//print_message("has taken a fork\n", philo);
+		//print_message("has taken a fork", philo);
 		philo->info->forks[philo->fork_l] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
-		//print_message("has taken a fork\n", philo);
+		//print_message("has taken a fork", philo);
 		//Tiempo de comida
 		philo->t_last_eat = get_time(philo->info);
-		//print_message("is eating\n", philo);
+		//print_message("is eating", philo);
 		ft_sleep(philo->info->t_eat);
+		
 		//Dejar tenedores
 		pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
 		philo->info->forks[philo->fork_r] = 0;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
 		pthread_mutex_lock(&philo->info->mutex[philo->fork_l]);
 		philo->info->forks[philo->fork_l] = 0;
-		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);		
+		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
+		philo->think = 0;
 	}
 	else
 	{
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
+		philo->think = 1;
 	}
+}
+
+//	CHECKEAR QUE SE PUEDAN MORIR EN MEDIO DEL FT_SLEEP
+void nap(t_phylo *philo)
+{
+	print_message("is sleeping", philo);
+	ft_sleep(philo->info->t_sleep);
+	print_message("is thinking", philo);
 }
 
 void *rutine(void *argv)
@@ -106,6 +91,13 @@ void *rutine(void *argv)
 		eat(philo);
 		if (philo->info->death == 1)
 			return NULL;
+		if (philo->think == 1)
+		{
+			//print_message("is thinking", philo);
+			eat(philo);
+		}
+		else
+			nap(philo);
 	}
 	return NULL;
 }
