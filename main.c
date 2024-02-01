@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/31 20:57:30 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/01 21:33:11 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	check_death(t_phylo *philo, t_info *info)
 {
-	long	t_since_eat = 0;
+	//long	t_since_eat = 0;
 	int		idx = 0;
 	//printf("hora desde la ultima vez que comió%ld\n", philo->t_last_eat);
 	while (1)
@@ -24,9 +24,9 @@ void	check_death(t_phylo *philo, t_info *info)
 		//print_message("qué filo eres", &philo[idx]);
 		if (idx == info->n_philo)
 			idx = 0;
-		t_since_eat = philo[idx].t_last_eat - info->start;
+		//t_since_eat = philo[idx].t_last_eat - info->start;
 		//printf("DNI = %d, hora de la ultima comida = %ld, hora de start = %ld, diferencia = %ld\n", philo[idx].dni, philo[idx].t_last_eat, philo[idx].info->start, t_since_eat);
-		if (t_since_eat >= info->t_die)
+		if (philo[idx].t_last_eat >= info->t_die)
 		{
 			philo[idx].info->death = 1;
 			print_message("is dead", &philo[idx]);
@@ -45,12 +45,14 @@ void	eat(t_phylo *philo)
 		//Coger tedenedores
 		philo->info->forks[philo->fork_r] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
-		print_message("has taken a fork", philo);
+		//print_message("has taken a fork", philo);
 		philo->info->forks[philo->fork_l] = 1;
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
-		print_message("has taken a fork", philo);
+		//print_message("has taken a fork", philo);
 		//Tiempo de comida
-		philo->t_last_eat = get_time(philo->info);
+		//REVISAR PARTE DEL TIEMPO DE COMIDA. TIENE QUE GUARDAR LA DIFERENCIA ENTRE PENULTIMA COMIDA Y ULTIMA COMIDA. 
+		//VOLVER A HACER EL CHEK ANTES DE MIRAR SI VIVE O MUERE (SUMAR MS QUE HA PASAD HACIENDO OTRAS COSAS)
+		philo->t_last_eat = get_time(philo->info) - philo->t_last_eat;
 		print_message("is eating", philo);
 		ft_sleep(philo->info->t_eat);
 		
