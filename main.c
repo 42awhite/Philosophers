@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/01 21:33:11 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/07 21:33:03 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@ void	check_death(t_phylo *philo, t_info *info)
 		//print_message("qué filo eres", &philo[idx]);
 		if (idx == info->n_philo)
 			idx = 0;
-		//t_since_eat = philo[idx].t_last_eat - info->start;
-		//printf("DNI = %d, hora de la ultima comida = %ld, hora de start = %ld, diferencia = %ld\n", philo[idx].dni, philo[idx].t_last_eat, philo[idx].info->start, t_since_eat);
+		philo[idx].t_last_eat = dif_time(info) - philo[idx].t_last_eat;
+		printf("DNI = %d, hora de la ultima comida = %ld, hora de start = %ld, t muerte = %ld\n", philo[idx].dni, philo[idx].t_last_eat, philo[idx].info->start, info->t_die);
 		if (philo[idx].t_last_eat >= info->t_die)
 		{
 			philo[idx].info->death = 1;
 			print_message("is dead", &philo[idx]);
 			return ;
 		}
+		usleep(1000);
 		idx++;
 	}
 }
@@ -52,7 +53,7 @@ void	eat(t_phylo *philo)
 		//Tiempo de comida
 		//REVISAR PARTE DEL TIEMPO DE COMIDA. TIENE QUE GUARDAR LA DIFERENCIA ENTRE PENULTIMA COMIDA Y ULTIMA COMIDA. 
 		//VOLVER A HACER EL CHEK ANTES DE MIRAR SI VIVE O MUERE (SUMAR MS QUE HA PASAD HACIENDO OTRAS COSAS)
-		philo->t_last_eat = get_time(philo->info) - philo->t_last_eat;
+		philo->t_last_eat = get_time(philo->info) - philo->info->start - philo->t_last_eat;
 		print_message("is eating", philo);
 		ft_sleep(philo->info->t_eat);
 		
