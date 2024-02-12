@@ -6,40 +6,37 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/12 15:59:58 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/12 21:09:29 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
+//DEBERES: Ya tenemos guardado el número de comidas.
+//será = -1 si no se especifica en el argv
+//Poner nueva variable de número de veces que ha comido para cada philo (n_i_eat)
 
 void	check_death(t_phylo *philo, t_info *info)
 {
-	//long	t_since_eat = 0;
 	int		idx = 0;
-	//printf("hora desde la ultima vez que comió%ld\n", philo->t_last_eat);
+	
 	while (1)
 	{
-		//print_message("qué filo eres", &philo[idx]);
 		if (idx == info->n_philo)
 			idx = 0;
-		//printf("DNI = %d, hora de la ultima comida = %ld, hora de start = %ld, t muerte = %ld\n", philo[idx].dni, philo[idx].t_last_eat, philo[idx].info->start, info->t_die);
 		if ((dif_time(info) - philo[idx].t_last_eat) >= info->t_die)
 		{
 			philo[idx].info->death = 1;
 			print_message("\033[0;31m is dead \033[0m", &philo[idx]);
 			return ;
 		}
-		usleep(1000);
 		idx++;
 	}
 }
 
-void	eat(t_phylo *philo)
+void	take_forks(t_phylo *philo)
 {
-	while(1)
-	{
 		pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
 		pthread_mutex_lock(&philo->info->mutex[philo->fork_l]);
 		if (philo->info->forks[philo->fork_r] == 0 && philo->info->forks[philo->fork_l] == 0)
@@ -54,16 +51,22 @@ void	eat(t_phylo *philo)
 			//Tiempo de comida
 			philo->t_last_eat = get_time(philo->info) - philo->info->start;
 			print_message("\033[0;32m is eating \033[0m", philo);
-			//printf("\033[0;31m%4ldms %d is eating / %ld\n\033[0m", dif_time(philo->info), philo->dni, philo->t_last_eat);
-			ft_sleep(philo->info->t_eat);
+			ft_sleep(philo->info->t_eat, philo->info);
 			philo->think = 0;
-
 			pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
 			pthread_mutex_lock(&philo->info->mutex[philo->fork_l]);
 			//Dejar tenedores
 			philo->info->forks[philo->fork_r] = 0;
 			philo->info->forks[philo->fork_l] = 0;
 		}
+}
+
+void	eat(t_phylo *philo)
+{
+	//Hacer un bucle nuevo, si n_meal >= 0 entra y while n_i_eat <= n_meals meterse en la rutina
+	while(1)
+	{
+		take_forks(philo);
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
 		if (philo->think == 0)
@@ -71,18 +74,19 @@ void	eat(t_phylo *philo)
 	}
 }
 
-//	CHECKEAR QUE SE PUEDAN MORIR EN MEDIO DEL FT_SLEEP
+
 void nap(t_phylo *philo)
 {
 	print_message("\033[0;36m is sleeping \033[0m", philo);
-	ft_sleep(philo->info->t_sleep);
+	ft_sleep(philo->info->t_sleep, philo->info);
+	if (philo->info->death == 1)
+		return ;
 	print_message("\033[0;35m is thinking \033[0m", philo);
 	philo->think = 1;
 }
 
 void *rutine(void *argv)
 {
-	//int i = 0;
 	t_phylo *philo;
 	philo = (t_phylo *)argv;
 	while (1)
@@ -117,14 +121,11 @@ int main(int argc, char **argv)
 	while (info.n_philo > idx)
 	{
 		single_philo = (void *)&philos[idx];
-		//printf("Hemos hecho bien la meurte %d\n", philos[idx].info->death);
-	//	printf("TU ERE %d\n", philos[idx].dni);
 		if (pthread_create(&philos[idx].hilo, NULL, rutine, single_philo) != 0) 
 		{
 			fprintf(stderr, "Error al crear el hilo\n");
 			return 1;
 		}
-		///print_message("esta durmiendo", &philos[idx], &info);
 		idx++;
 	}
 	check_death(philos, &info);

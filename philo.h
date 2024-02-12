@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/31 19:45:46 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:29:36 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_phylo
 //Funciones de tiempo
 long	get_time();
 long 	dif_time(t_info *info);
-void	ft_sleep(long ms);
+void	ft_sleep(long ms, t_info *info);
 //Utils
 int 	ft_perror(char *str);
 int		ft_atoi(const char *str);

@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/31 19:04:04 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/12 20:28:01 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void ft_sleep(long ms)
+void ft_sleep(long ms, t_info *info)
 {
 	long	start;
 	long	finish;
 	
 	start = get_time();
 	finish = start + ms;
-	while (start < finish)
+	while (start < finish && info->death == 0)
 	{
 		usleep(50);
 		start = get_time();

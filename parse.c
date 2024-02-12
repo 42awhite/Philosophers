@@ -42,5 +42,8 @@ int		save_arg(char **argv, int argc, t_info *info)
 		if (info->n_meal == -1)
 			return(ft_perror("atoi n_meal error"));
 	}
+	else
+		info->n_meal = -1;
+	printf("el número de comidas es %d\n", info->n_meal);
 	return (1);
 }
