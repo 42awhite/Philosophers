@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 21:06:40 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/01/28 21:01:02 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/12 16:05:06 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int ft_perror(char *str)
 void	print_message(char *str, t_phylo *philo)
 {
 	//pthread_mutex_lock(&mutex);
-	printf("%ld %d %s\n", dif_time(philo->info), philo->dni, str);
+	printf("%ldms %d %s\n", dif_time(philo->info), philo->dni, str);
 	//pthread_mutex_unlock(&mutex);
 }
 
