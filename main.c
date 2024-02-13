@@ -3,29 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/13 16:35:53 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/13 21:30:54 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "philo.h"
 
-//DEBERES: Ya tenemos guardado el número de comidas.
-//será = -1 si no se especifica en el argv
-//En Check_death, que no se mueran si han llegado al límite de comidas
+//DEBERES: 
+//n_eats será = -1 si no se especifica en el argv
+//Comprobar por qué comen de más cuando todos llegan al n comidas. 
 
 void	check_death(t_phylo *philo, t_info *info)
 {
 	int		idx = 0;
 	
+	
 	while (1)
 	{
 		if (idx == info->n_philo)
 			idx = 0;
-		if ((dif_time(info) - philo[idx].t_last_eat) >= info->t_die)
+		if (philo->info->n_end_eat == philo->info->n_philo)
+			return ;
+		if ((dif_time(info) - philo[idx].t_last_eat) >= info->t_die) 
 		{
 			philo[idx].info->death = 1;
 			print_message("\033[0;31m is dead \033[0m", &philo[idx]);
@@ -68,6 +71,8 @@ void	eat(t_phylo *philo)
 	//Hacer un bucle nuevo, si n_meal >= 0 entra y while n_i_eat <= n_meals meterse en la rutina
 	while(1)
 	{
+		if (philo->info->n_end_eat == philo->info->n_philo)
+			return ;
 		take_forks(philo);
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
 		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
@@ -96,6 +101,8 @@ void *rutine(void *argv)
 		if (philo->info->n_meal >= 0)
 		{
 			if (philo->n_i_eaten == philo->info->n_meal)
+				philo->info->n_end_eat = philo->info->n_end_eat + 1;
+			if (philo->info->n_end_eat == philo->info->n_philo)
 				return NULL;
 		}
 		if (philo->info->death == 1)
