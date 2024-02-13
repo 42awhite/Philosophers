@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/12 20:29:36 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/13 12:58:39 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_phylo
 	int dni;
 	int fork_r;
 	int fork_l;
+	int	n_i_eaten;
 	long	t_last_eat;
 	int		think;
 	

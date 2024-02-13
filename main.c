@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/12 21:09:29 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/13 16:35:53 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 //DEBERES: Ya tenemos guardado el número de comidas.
 //será = -1 si no se especifica en el argv
-//Poner nueva variable de número de veces que ha comido para cada philo (n_i_eat)
+//En Check_death, que no se mueran si han llegado al límite de comidas
 
 void	check_death(t_phylo *philo, t_info *info)
 {
@@ -51,6 +51,8 @@ void	take_forks(t_phylo *philo)
 			//Tiempo de comida
 			philo->t_last_eat = get_time(philo->info) - philo->info->start;
 			print_message("\033[0;32m is eating \033[0m", philo);
+			philo->n_i_eaten = philo->n_i_eaten + 1;
+			printf("numero de veces que %d ha comido = %d GORDI\n", philo->dni, philo->n_i_eaten);
 			ft_sleep(philo->info->t_eat, philo->info);
 			philo->think = 0;
 			pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
@@ -91,6 +93,11 @@ void *rutine(void *argv)
 	philo = (t_phylo *)argv;
 	while (1)
 	{
+		if (philo->info->n_meal >= 0)
+		{
+			if (philo->n_i_eaten == philo->info->n_meal)
+				return NULL;
+		}
 		if (philo->info->death == 1)
 			return NULL;
 		eat(philo);

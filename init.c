@@ -23,7 +23,6 @@ int	do_philos(t_phylo **philos, t_info *info)
 	*philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
 	if (!*philos)
 		ft_perror("Error, philos can't born");
-	// TODO: relocate
 	info->mutex = (pthread_mutex_t *)malloc(info->n_philo * sizeof(pthread_mutex_t));
 	if (!info->mutex)
 		ft_perror("Error malloc mutex");
@@ -33,14 +32,13 @@ int	do_philos(t_phylo **philos, t_info *info)
 		(*philos)[idx].dni = idx + 1;
 		(*philos)[idx].t_last_eat = 0;
 		(*philos)[idx].think = 0;
-		//(*philos)[idx].death = 0;
+		(*philos)[idx].n_i_eaten = 0;
 		(*philos)[idx].fork_l = idx;
 		if (idx == (info->n_philo - 1))
 			(*philos)[idx].fork_r = 0;
 		else
 			(*philos)[idx].fork_r = idx + 1;	
 		(*philos)[idx].info = info;
-		// TODO: relocate
 		if (pthread_mutex_init(info->mutex + idx, NULL))
 			ft_perror("Mutex init error");
 		printf("dni philos en pos %d = %d\n", idx, (*philos)[idx].dni);
