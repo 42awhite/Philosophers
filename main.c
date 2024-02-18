@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/15 17:49:22 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/18 20:01:43 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 //DEBERES: 
 //n_eats será = -1 si no se especifica en el argv
 //Comprobar por qué comen de más cuando todos llegan al n comidas. 
+//POR QUE AHORA SE MUEREN ANTES DE TIEMPO, CHECKEAR
+//data rices done
 
 void	check_death(t_phylo *philo, t_info *info)
 {
@@ -26,40 +28,47 @@ void	check_death(t_phylo *philo, t_info *info)
 	{
 		if (idx == info->n_philo)
 			idx = 0;
-		if (philo->info->n_end_eat == philo->info->n_philo)
-			return ;
+		//if (philo->info->n_end_eat == philo->info->n_philo)
+		//	return ;
+		pthread_mutex_lock(&philo[idx].mutex_time);
 		if ((dif_time(info) - philo[idx].t_last_eat) >= info->t_die) 
 		{
+			pthread_mutex_lock(&info->mutex_dead);
 			philo[idx].info->death = 1;
+			pthread_mutex_unlock(&info->mutex_dead);
+			pthread_mutex_unlock(&philo[idx].mutex_time);
 			print_message("\033[0;31m is dead \033[0m", &philo[idx]);
 			return ;
 		}
+		pthread_mutex_unlock(&philo[idx].mutex_time);
 		idx++;
 	}
 }
 
 void	take_forks(t_phylo *philo)
 {
-		pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
-		pthread_mutex_lock(&philo->info->mutex[philo->fork_l]);
+		pthread_mutex_lock(&philo->info->mutex_fork[philo->fork_r]);
+		pthread_mutex_lock(&philo->info->mutex_fork[philo->fork_l]);
 		if (philo->info->forks[philo->fork_r] == 0 && philo->info->forks[philo->fork_l] == 0)
 		{
 			//Coger tedenedores
 			philo->info->forks[philo->fork_r] = 1;
 			philo->info->forks[philo->fork_l] = 1;
-			pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
-			pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
+			pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_r]);
+			pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_l]);
 			print_message("\033[0;33m has taken a fork \033[0m", philo);
 			print_message("\033[0;33m has taken a fork \033[0m", philo);
 			//Tiempo de comida
+			pthread_mutex_lock(&philo->mutex_time);
 			philo->t_last_eat = get_time(philo->info) - philo->info->start;
+			pthread_mutex_unlock(&philo->mutex_time);
 			print_message("\033[0;32m is eating \033[0m", philo);
 			philo->n_i_eaten = philo->n_i_eaten + 1;
 			printf("numero de veces que %d ha comido = %d GORDI\n", philo->dni, philo->n_i_eaten);
 			ft_sleep(philo->info->t_eat, philo->info);
 			philo->think = 0;
-			pthread_mutex_lock(&philo->info->mutex[philo->fork_r]);
-			pthread_mutex_lock(&philo->info->mutex[philo->fork_l]);
+			pthread_mutex_lock(&philo->info->mutex_fork[philo->fork_r]);
+			pthread_mutex_lock(&philo->info->mutex_fork[philo->fork_l]);
 			//Dejar tenedores
 			philo->info->forks[philo->fork_r] = 0;
 			philo->info->forks[philo->fork_l] = 0;
@@ -74,8 +83,8 @@ void	eat(t_phylo *philo)
 		if (philo->info->n_end_eat == philo->info->n_philo)
 			return ;
 		take_forks(philo);
-		pthread_mutex_unlock(&philo->info->mutex[philo->fork_r]);
-		pthread_mutex_unlock(&philo->info->mutex[philo->fork_l]);
+		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_r]);
+		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_l]);
 		if (philo->think == 0)
 			break;
 	}
@@ -86,8 +95,13 @@ void nap(t_phylo *philo)
 {
 	print_message("\033[0;36m is sleeping \033[0m", philo);
 	ft_sleep(philo->info->t_sleep, philo->info);
+	pthread_mutex_lock(&philo->info->mutex_dead);
 	if (philo->info->death == 1)
+	{
+		pthread_mutex_unlock(&philo->info->mutex_dead);
 		return ;
+	}
+	pthread_mutex_unlock(&philo->info->mutex_dead);
 	print_message("\033[0;35m is thinking \033[0m", philo);
 	philo->think = 1;
 }
@@ -100,16 +114,31 @@ void *rutine(void *argv)
 	{
 		if (philo->info->n_meal >= 0)
 		{
+			pthread_mutex_lock(&philo->info->mutex_end_eat);
 			if (philo->n_i_eaten == philo->info->n_meal)
 				philo->info->n_end_eat = philo->info->n_end_eat + 1;
 			if (philo->info->n_end_eat == philo->info->n_philo)
+			{
+				pthread_mutex_unlock(&philo->info->mutex_end_eat);
 				return NULL;
+			}
+			pthread_mutex_unlock(&philo->info->mutex_end_eat);
 		}
+		pthread_mutex_lock(&philo->info->mutex_dead);
 		if (philo->info->death == 1)
+		{
+			pthread_mutex_unlock(&philo->info->mutex_dead);
 			return NULL;
+		}
+		pthread_mutex_unlock(&philo->info->mutex_dead);
 		eat(philo);
+		pthread_mutex_lock(&philo->info->mutex_dead);
 		if (philo->info->death == 1)
+		{
+			pthread_mutex_unlock(&philo->info->mutex_dead);
 			return NULL;
+		}
+		pthread_mutex_unlock(&philo->info->mutex_dead);
 		nap(philo);
 	}
 	return NULL;

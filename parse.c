@@ -32,6 +32,10 @@ int		save_arg(char **argv, int argc, t_info *info)
 	info->t_sleep = ft_atoi(argv[4]);
 	info->n_end_eat = 0;
 	info->death = 0;
+	if (pthread_mutex_init(&info->mutex_dead, NULL))
+		ft_perror("mutex_dead error");
+	if (pthread_mutex_init(&info->mutex_end_eat, NULL))
+		ft_perror("mutex_end_eat error");
 	if (info->n_philo == -1 || info->t_die == -1 || info->t_eat == -1 || info->t_sleep == -1)
 		return(ft_perror("atoi error"));
 	if (info->n_philo > 200)
