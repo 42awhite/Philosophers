@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/18 19:34:10 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/19 19:10:04 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_phylo
 	int fork_l;
 	int	n_i_eaten;
 	long	t_last_eat;
-	int		think;
+	int		state;
 	
 	pthread_mutex_t mutex_time;
 	t_info *info;

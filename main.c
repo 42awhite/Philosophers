@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/18 20:01:43 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/19 18:10:33 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 //Comprobar por qué comen de más cuando todos llegan al n comidas. 
 //POR QUE AHORA SE MUEREN ANTES DE TIEMPO, CHECKEAR
 //data rices done
+//TAREA: PONER ESTADO EN PLAN NUMERO Y QUE ENTRE SOLO SI EL ESTADO EQUIVALE AL NUMERO 
 
 void	check_death(t_phylo *philo, t_info *info)
 {
 	int		idx = 0;
-	
 	
 	while (1)
 	{
@@ -77,7 +77,6 @@ void	take_forks(t_phylo *philo)
 
 void	eat(t_phylo *philo)
 {
-	//Hacer un bucle nuevo, si n_meal >= 0 entra y while n_i_eat <= n_meals meterse en la rutina
 	while(1)
 	{
 		if (philo->info->n_end_eat == philo->info->n_philo)
