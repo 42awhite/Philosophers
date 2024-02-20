@@ -31,7 +31,7 @@ int	do_philos(t_phylo **philos, t_info *info)
 		//printf("\tFROM ALLOCATOR -> %p\n", (*philos) + idx);
 		(*philos)[idx].dni = idx + 1;
 		(*philos)[idx].t_last_eat = 0;
-		(*philos)[idx].think = 0;
+		(*philos)[idx].state = 0;
 		(*philos)[idx].n_i_eaten = 0;
 		(*philos)[idx].fork_l = idx;
 		if (pthread_mutex_init(&(*philos)[idx].mutex_time, NULL))
