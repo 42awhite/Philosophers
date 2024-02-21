@@ -6,7 +6,7 @@
 /*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/20 17:48:49 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/21 20:28:36 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 //DEBERES: 
 //n_eats será = -1 si no se especifica en el argv
-//Comprobar por qué comen de más cuando todos llegan al n comidas. 
 //POR QUE AHORA SE MUEREN ANTES DE TIEMPO, CHECKEAR
 //State: 0 si aun no h an comido; 1 si han comido tienen que dormir;
 
@@ -46,6 +45,7 @@ void	check_death(t_phylo *philo, t_info *info)
 		}
 		pthread_mutex_unlock(&philo[idx].mutex_time);
 		idx++;
+		ft_sleep(50, info);
 	}
 }
 
@@ -79,6 +79,8 @@ void	take_forks(t_phylo *philo)
 			philo->info->forks[philo->fork_r] = 0;
 			philo->info->forks[philo->fork_l] = 0;
 		}
+		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_r]);
+		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_l]);
 }
 
 void	eat(t_phylo *philo)
@@ -86,15 +88,16 @@ void	eat(t_phylo *philo)
 	while(1)
 	{
 		pthread_mutex_lock(&philo->info->mutex_end_eat);
-		if (philo->info->n_end_eat == philo->info->n_philo)
+		pthread_mutex_lock(&philo->info->mutex_dead);
+		if (philo->info->n_end_eat == philo->info->n_philo || philo->info->death == 1)
 		{
 			pthread_mutex_unlock(&philo->info->mutex_end_eat);
+			pthread_mutex_unlock(&philo->info->mutex_dead);
 			return ;
 		}
+		pthread_mutex_unlock(&philo->info->mutex_dead);			
 		pthread_mutex_unlock(&philo->info->mutex_end_eat);
 		take_forks(philo);
-		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_r]);
-		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_l]);
 		if (philo->state == 1)
 			break;
 	}
@@ -120,6 +123,8 @@ void *rutine(void *argv)
 {
 	t_phylo *philo;
 	philo = (t_phylo *)argv;
+	if (!(philo->dni % 2))
+		usleep(50);
 	while (1)
 	{
 		//chequea si todos han llegado al n_comidas

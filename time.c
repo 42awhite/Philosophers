@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/18 18:58:12 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/21 20:28:01 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,11 @@ void ft_sleep(long ms, t_info *info)
 	
 	start = get_time();
 	finish = start + ms;
-	pthread_mutex_lock(&info->mutex_dead);
-	while (start < finish && info->death == 0)
+	while (start < finish)
 	{
 		usleep(50);
 		start = get_time();
 	}
-	pthread_mutex_unlock(&info->mutex_dead);
 }
 
 long get_time()
