@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/19 19:10:04 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/26 20:19:35 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_phylo
 //Funciones de tiempo
 long	get_time();
 long 	dif_time(t_info *info);
-void	ft_sleep(long ms, t_info *info);
+void	ft_sleep(long ms);
 //Utils
 int 	ft_perror(char *str);
 int		ft_atoi(const char *str);
@@ -65,6 +65,11 @@ int		save_arg(char **argv, int argc, t_info *info);
 //Init
 void	do_fork(t_info *info);
 int		do_philos(t_phylo **philos, t_info *info);
+//end
+int	check_n_eats(t_phylo *philo);
+void	check_death(t_phylo *philo, t_info *info);
+int are_u_dead(t_phylo *philo);
+
 
 
 #endif

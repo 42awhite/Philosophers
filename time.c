@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/21 20:28:01 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/26 19:43:24 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void ft_sleep(long ms, t_info *info)
+void ft_sleep(long ms)
 {
 	long	start;
 	long	finish;
@@ -34,7 +34,7 @@ long get_time()
 	gettimeofday(&start_time, NULL);
 	ms = (start_time.tv_sec * 1000) + (start_time.tv_usec / 1000);
 	return(ms);
-}
+} 
 
 long dif_time(t_info *info)
 {

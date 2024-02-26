@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/21 20:28:36 by pc               ###   ########.fr       */
+/*   Updated: 2024/02/26 20:35:29 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,36 +18,6 @@
 //POR QUE AHORA SE MUEREN ANTES DE TIEMPO, CHECKEAR
 //State: 0 si aun no h an comido; 1 si han comido tienen que dormir;
 
-void	check_death(t_phylo *philo, t_info *info)
-{
-	int		idx = 0;
-	
-	while (1)
-	{
-		if (idx == info->n_philo)
-			idx = 0;
-		pthread_mutex_lock(&info->mutex_end_eat);
-		if (info->n_end_eat == info->n_philo)
-		{
-			pthread_mutex_unlock(&info->mutex_end_eat);
-			return ;
-		}
-		pthread_mutex_unlock(&info->mutex_end_eat);
-		pthread_mutex_lock(&philo[idx].mutex_time);
-		if ((dif_time(info) - philo[idx].t_last_eat) >= info->t_die) 
-		{
-			pthread_mutex_lock(&info->mutex_dead);
-			philo[idx].info->death = 1;
-			pthread_mutex_unlock(&info->mutex_dead);
-			pthread_mutex_unlock(&philo[idx].mutex_time);
-			print_message("\033[0;31m is dead \033[0m", &philo[idx]);
-			return ;
-		}
-		pthread_mutex_unlock(&philo[idx].mutex_time);
-		idx++;
-		ft_sleep(50, info);
-	}
-}
 
 void	take_forks(t_phylo *philo)
 {
@@ -69,7 +39,7 @@ void	take_forks(t_phylo *philo)
 			print_message("\033[0;32m is eating \033[0m", philo);
 			philo->n_i_eaten = philo->n_i_eaten + 1;
 			
-			ft_sleep(philo->info->t_eat, philo->info);
+			ft_sleep(philo->info->t_eat);
 			
 			philo->state = 1;
 			
@@ -107,7 +77,7 @@ void	eat(t_phylo *philo)
 void nap(t_phylo *philo)
 {
 	print_message("\033[0;36m is sleeping \033[0m", philo);
-	ft_sleep(philo->info->t_sleep, philo->info);
+	ft_sleep(philo->info->t_sleep);
 	pthread_mutex_lock(&philo->info->mutex_dead);
 	if (philo->info->death == 1)
 	{
@@ -123,55 +93,28 @@ void *rutine(void *argv)
 {
 	t_phylo *philo;
 	philo = (t_phylo *)argv;
-	if (!(philo->dni % 2))
-		usleep(50);
+	int end_eat;
+	
+	end_eat = 0;
+//	if (!(philo->dni % 2))
+//		usleep(50);
 	while (1)
 	{
 		//chequea si todos han llegado al n_comidas
 		if (philo->info->n_meal >= 0)
-		{
-			pthread_mutex_lock(&philo->info->mutex_end_eat);
-			if (philo->n_i_eaten == philo->info->n_meal)
-			{
-				printf("El filo %d ha comido %d veces GORRDITO\n", philo->dni, philo->n_i_eaten);
-				philo->info->n_end_eat = philo->info->n_end_eat + 1;
-				printf("Filos que han acabado de comer = %d\n", philo->info->n_end_eat);
-				
-			}
-			if (philo->info->n_end_eat == philo->info->n_philo)
-			{
-				printf("n_end_eat al salir = %d\n", philo->info->n_end_eat);
-				printf("n_philos al salir = %d\n", philo->info->n_philo);
-				pthread_mutex_unlock(&philo->info->mutex_end_eat);
-				return NULL;
-			}
-			pthread_mutex_unlock(&philo->info->mutex_end_eat);
-		}
-		//---------------------------------------------
-		pthread_mutex_lock(&philo->info->mutex_dead);
-		if (philo->info->death == 1)
-		{
-			pthread_mutex_unlock(&philo->info->mutex_dead);
+			end_eat = check_n_eats(philo);
+		if (end_eat == 1)
 			return NULL;
-		}
-		pthread_mutex_unlock(&philo->info->mutex_dead);
-		
+		if(are_u_dead(philo) == 1)
+			return NULL;
 		//Comer
 		eat(philo);
-		
-		pthread_mutex_lock(&philo->info->mutex_dead);
-		if (philo->info->death == 1)
-		{
-			pthread_mutex_unlock(&philo->info->mutex_dead);
+		if(are_u_dead(philo) == 1)
 			return NULL;
-		}
-		pthread_mutex_unlock(&philo->info->mutex_dead);
-		
 		//Dormir y pensar
 		if (philo->state == 1)
 			nap(philo);
 	}
-	return NULL;
 }
 
 int main(int argc, char **argv)
