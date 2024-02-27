@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/26 20:19:35 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/02/27 19:47:11 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,17 @@ void	print_message(char *str, t_phylo *philo);
 int		parse(int argc, char **argv);
 int		save_arg(char **argv, int argc, t_info *info);
 //Init
-void	do_fork(t_info *info);
+int		do_fork(t_info *info);
 int		do_philos(t_phylo **philos, t_info *info);
 //end
 int	check_n_eats(t_phylo *philo);
 void	check_death(t_phylo *philo, t_info *info);
 int are_u_dead(t_phylo *philo);
+//rutine
+void	take_forks(t_phylo *philo);
+void	eat(t_phylo *philo);
+void nap(t_phylo *philo);
+void *rutine(void *argv);
 
 
 

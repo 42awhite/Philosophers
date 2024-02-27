@@ -1,17 +1,20 @@
 
 #include "philo.h"
 
-void do_fork(t_info *info)
+int do_fork(t_info *info)
 {
 	int idx;
 	
 	idx = 0;
 	info->forks = (int *)malloc(info->n_philo * sizeof(int));
+	if (!info->forks)
+		return(ft_perror("Error, the blacksmith did not forge the forks"));
 	while(info->n_philo > idx)
 	{
 		info->forks[idx] = 0;
 		idx ++;
 	}
+	return(0);
 }
 
 int	do_philos(t_phylo **philos, t_info *info)
@@ -22,10 +25,10 @@ int	do_philos(t_phylo **philos, t_info *info)
 	printf("n philos = %d\n", info->n_philo);
 	*philos = (t_phylo *)malloc(info->n_philo * sizeof(t_phylo));
 	if (!*philos)
-		ft_perror("Error, philos can't born");
+		return(ft_perror("Error, philos can't born"));
 	info->mutex_fork = (pthread_mutex_t *)malloc(info->n_philo * sizeof(pthread_mutex_t));
 	if (!info->mutex_fork)
-		ft_perror("Error malloc mutex");
+		return(ft_perror("Error malloc mutex"));
 	while (idx < info->n_philo)
 	{
 		//printf("\tFROM ALLOCATOR -> %p\n", (*philos) + idx);
