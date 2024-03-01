@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/27 21:08:52 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/01 14:49:23 by pc               ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,22 @@ int	check_all_ok(int argc, char **argv, t_info *info, t_phylo **philos)
 	return (0);
 }
 
+//void free_philo()
+//{
+//	idx = 0;
+//	while (idx < info.n_philo)
+//	{
+//		pthread_mutex_destroy(&philos[idx].mutex_time);
+//		pthread_mutex_destroy(&info.mutex_fork[idx]);
+//	}
+//	pthread_mutex_destroy(&info.mutex_dead);
+//	pthread_mutex_destroy(&info.mutex_end_eat);
+//	free(info.forks);
+//	free(info.mutex_fork);
+//	free(philos);
+//	system("leaks philo");
+//}
+
 int main(int argc, char **argv)
 {
 	t_info info;
@@ -40,13 +56,6 @@ int main(int argc, char **argv)
 	
 	if (check_all_ok(argc, argv, &info, &philos) == -1)
 		return(0);
-	//if (parse(argc, argv) == -1)
-	//	return(0);
-	//if (save_arg(argv, argc, &info) == -1)
-	//	return(0);
-	//do_fork(&info);
-	//if (do_philos(&philos, &info) == -1)
-	//	return(0);
 	
 	info.start = get_time();
 	
@@ -61,7 +70,7 @@ int main(int argc, char **argv)
 		idx++;
 	}
 	check_death(philos, &info);
-	
+	printf("hola?\n");
 	// Esperar a que el hilo termine
 	idx = 0;
 	while (idx < info.n_philo)
@@ -73,6 +82,24 @@ int main(int argc, char **argv)
 		}
 		idx++;
 	}
+	
+	//free philo
+	printf("hola again?\n");
+	idx = 0;
+	while (idx < info.n_philo)
+		{
+			pthread_mutex_destroy(&philos[idx].mutex_time);
+			pthread_mutex_destroy(&info.mutex_fork[idx]);
+			idx++;
+		}
+	pthread_mutex_destroy(&info.mutex_dead);
+	pthread_mutex_destroy(&info.mutex_end_eat);
+	free(info.forks);
+	free(info.mutex_fork);
+	free(philos);
+	system("leaks philo");
+	
+		
 }
 
 //n_philos	t_to_die	t_to_eat	t_to_sleep
@@ -82,4 +109,4 @@ int main(int argc, char **argv)
 //CHECKEAR hacer free a: 
 //los philos 
 //los tenedores. 
-//los mutex
+//los mutex 

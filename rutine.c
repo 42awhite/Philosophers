@@ -34,7 +34,7 @@ void	take_forks(t_phylo *philo)
 		pthread_mutex_unlock(&philo->info->mutex_fork[philo->fork_l]);
 }
 
-void	eat(t_phylo *philo)
+int	eat(t_phylo *philo)
 {
 	while(1)
 	{
@@ -44,7 +44,7 @@ void	eat(t_phylo *philo)
 		{
 			pthread_mutex_unlock(&philo->info->mutex_end_eat);
 			pthread_mutex_unlock(&philo->info->mutex_dead);
-			return ;
+			return(1);
 		}
 		pthread_mutex_unlock(&philo->info->mutex_dead);			
 		pthread_mutex_unlock(&philo->info->mutex_end_eat);
@@ -52,6 +52,7 @@ void	eat(t_phylo *philo)
 		if (philo->state == 1)
 			break;
 	}
+	return(1);
 }
 
 void nap(t_phylo *philo)
@@ -88,7 +89,11 @@ void *rutine(void *argv)
 		if(are_u_dead(philo) == 1)
 			return NULL;
 		//Comer
-		eat(philo);
+		if (eat(philo) == 1)
+		{
+			printf("%d aqui llego?\n", philo->dni);
+			return NULL;
+		}
 		if(are_u_dead(philo) == 1)
 			return NULL;
 		//Dormir y pensar
