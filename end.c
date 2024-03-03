@@ -17,11 +17,12 @@ int	check_n_eats(t_phylo *philo)
 	pthread_mutex_lock(&philo->info->mutex_end_eat);
 	if (philo->n_i_eaten == philo->info->n_meal)
 	{
-		//printf("El filo %d ha comido %d veces GORRDITO\n", philo->dni, philo->n_i_eaten);
+		printf("El filo %d ha comido %d veces GORRDITO\n", philo->dni, philo->n_i_eaten);
 		philo->info->n_end_eat = philo->info->n_end_eat + 1;
-		//printf("Filos que han acabado de comer = %d\n", philo->info->n_end_eat);
+		printf("Filos que han acabado de comer = %d\n", philo->info->n_end_eat);
 		
 	}
+	pthread_mutex_unlock(&philo->info->mutex_end_eat);
 	if (end_eat(philo) == 1)
 		return(1);
 	return(0);

@@ -94,17 +94,11 @@ void *rutine(void *argv)
 			return NULL;
 		//Comer
 		if (eat(philo) == 1)
-		{
-			//printf("%d aqui llego?\n", philo->dni);
-			printf("%d Descanso?\n", philo->dni);
 			return NULL;
-		}
 		if(are_u_dead(philo) == 1)
 			return NULL;
 		//Dormir y pensar
 		if (philo->state == 1)
-		{
 			nap(philo);
-		}
 	}
 }
