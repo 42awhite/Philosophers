@@ -52,7 +52,7 @@ int	eat(t_phylo *philo)
 		if (philo->state == 1)
 			break;
 	}
-	return(1);
+	return(0);
 }
 
 void nap(t_phylo *philo)
@@ -77,10 +77,14 @@ void *rutine(void *argv)
 	int end_eat;
 	
 	end_eat = 0;
-	// if (!(philo->dni % 2))
-	// 	usleep(500);
+	if (philo->info->n_philo == 1)
+		{
+			ft_sleep(philo->info->t_die);
+			return NULL;
+		}
 	while (1)
 	{
+		delayer(philo);
 		//chequea si todos han llegado al n_comidas
 		if (philo->info->n_meal >= 0)
 			end_eat = check_n_eats(philo);
@@ -91,13 +95,16 @@ void *rutine(void *argv)
 		//Comer
 		if (eat(philo) == 1)
 		{
-			printf("%d aqui llego?\n", philo->dni);
+			//printf("%d aqui llego?\n", philo->dni);
+			printf("%d Descanso?\n", philo->dni);
 			return NULL;
 		}
 		if(are_u_dead(philo) == 1)
 			return NULL;
 		//Dormir y pensar
 		if (philo->state == 1)
+		{
 			nap(philo);
+		}
 	}
 }

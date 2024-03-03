@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/01 14:24:18 by pc               ###   ########.fr       */
+/*   Updated: 2024/03/03 17:43:05 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	take_forks(t_phylo *philo);
 int		eat(t_phylo *philo);
 void nap(t_phylo *philo);
 void *rutine(void *argv);
+void	delayer(t_phylo *philo);
 
 
 

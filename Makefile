@@ -6,7 +6,7 @@
 #    By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/23 21:06:44 by ablanco-          #+#    #+#              #
-#    Updated: 2024/02/27 19:21:42 by ablanco-         ###   ########.fr        #
+#    Updated: 2024/03/03 17:31:54 by ablanco-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC = main.c time.c utils.c parse.c init.c end.c rutine.c
 OBJS = ${SRC:.c=.o}
 
 CC = gcc
-CFLAGS = -Wall -Wextra  #-g3 -fsanitize=thread #-Werror -fsanitize=address 
+CFLAGS = -Wall -Wextra  -g3 #-fsanitize=thread #-Werror -fsanitize=address 
 #CFLAGS = -Wall -Wextra -g #-Werror
 
 

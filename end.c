@@ -49,7 +49,7 @@ void	check_death(t_phylo *philo, t_info *info)
 		}
 		pthread_mutex_unlock(&philo[idx].mutex_time);
 		idx++;
-	//	ft_sleep(50);
+		ft_sleep(50);
 	}
 }
 

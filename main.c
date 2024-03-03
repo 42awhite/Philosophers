@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/01 14:49:23 by pc               ###   ########.fr       */
+/*   Updated: 2024/03/03 18:14:20 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,16 @@
 //harcodear que se muera en x tiempo si el numero de philo es 1
 //Liberar memoria e hilos
 //Y la P formula
+
+void	delayer(t_phylo *philo)
+{
+	unsigned int	time_left;
+
+	time_left = philo->info->t_die
+		- (dif_time(philo->info) - philo->t_last_eat);
+	time_left /= 2;
+	usleep(time_left);
+}
 
 int	check_all_ok(int argc, char **argv, t_info *info, t_phylo **philos)
 {
@@ -70,7 +80,6 @@ int main(int argc, char **argv)
 		idx++;
 	}
 	check_death(philos, &info);
-	printf("hola?\n");
 	// Esperar a que el hilo termine
 	idx = 0;
 	while (idx < info.n_philo)
@@ -84,7 +93,6 @@ int main(int argc, char **argv)
 	}
 	
 	//free philo
-	printf("hola again?\n");
 	idx = 0;
 	while (idx < info.n_philo)
 		{
@@ -97,7 +105,7 @@ int main(int argc, char **argv)
 	free(info.forks);
 	free(info.mutex_fork);
 	free(philos);
-	system("leaks philo");
+	//system("leaks philo");
 	
 		
 }
