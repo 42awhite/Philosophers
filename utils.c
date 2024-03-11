@@ -3,26 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pc <pc@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 21:06:40 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/02/12 16:05:06 by pc               ###   ########.fr       */
+/*   Updated: 2024/03/04 21:20:53 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int ft_perror(char *str)
+int	ft_perror(char *str)
 {
 	printf("%s\n", str);
-	return(-1);
+	return (-1);
 }
 
 void	print_message(char *str, t_phylo *philo)
 {
-	//pthread_mutex_lock(&mutex);
 	printf("%ldms %d %s\n", dif_time(philo->info), philo->dni, str);
-	//pthread_mutex_unlock(&mutex);
 }
 
 int	ft_atoi(const char *str)
@@ -39,7 +37,7 @@ int	ft_atoi(const char *str)
 	if (str[c] == '-' || str[c] == '+')
 	{
 		if (str[c] == '-')
-		neg = neg * -1;
+			neg = neg * -1;
 		c++;
 	}
 	while (str[c] >= '0' && str[c] <= '9')
@@ -65,4 +63,3 @@ void	*ft_bzero(void *s, size_t n)
 	}
 	return (str);
 }
-
