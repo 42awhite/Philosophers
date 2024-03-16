@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 21:00:50 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/04 21:04:02 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:14:34 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	check_all_ok(int argc, char **argv, t_info *info, t_phylo **philos)
 	if (parse(argc, argv) == -1)
 		return (-1);
 	if (save_arg(argv, argc, info) == -1)
-		return (-1);
-	if (do_fork(info) == -1)
 		return (-1);
 	if (do_philos(philos, info) == -1)
 		return (-1);

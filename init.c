@@ -6,27 +6,11 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 20:32:31 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/04 20:59:54 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:10:31 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	do_fork(t_info *info)
-{
-	int	idx;
-
-	idx = 0;
-	info->forks = (int *)malloc(info->n_philo * sizeof(int));
-	if (!info->forks)
-		return (ft_perror("Error, the blacksmith did not forge the forks"));
-	while (info->n_philo > idx)
-	{
-		info->forks[idx] = 0;
-		idx ++;
-	}
-	return (0);
-}
 
 int	malloc_philo(t_phylo **philos, t_info *info)
 {
@@ -61,7 +45,7 @@ int	do_philos(t_phylo **philos, t_info *info)
 		else
 			(*philos)[idx].fork_r = idx + 1;
 		(*philos)[idx].info = info;
-		if (pthread_mutex_init(info->mutex_fork + idx, NULL))
+		if (pthread_mutex_init(&(info->mutex_fork)[idx], NULL))
 			return (ft_perror("Mutex init error"));
 		idx++;
 	}

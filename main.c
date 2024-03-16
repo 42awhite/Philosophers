@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:41:44 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/11 20:01:50 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:12:29 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	free_philo(t_phylo *philos, t_info *info)
 	}
 	pthread_mutex_destroy(&info->mutex_dead);
 	pthread_mutex_destroy(&info->mutex_end_eat);
-	free(info->forks);
 	free(info->mutex_fork);
 	free(philos);
 }

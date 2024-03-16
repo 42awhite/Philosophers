@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 20:21:46 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/11 20:11:43 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:12:13 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	end_eat(t_phylo *philo)
 {
-	int flag;
-	
+	int	flag;
+
 	flag = 0;
 	pthread_mutex_lock(&philo->info->mutex_end_eat);
 	if (philo->info->n_end_eat == philo->info->n_philo)
@@ -58,13 +58,13 @@ void	check_death(t_phylo *philo, t_info *info)
 		}
 		pthread_mutex_unlock(&philo[idx].mutex_time);
 		idx++;
-		ft_sleep(50);
+		usleep(1000);
 	}
 }
 
 int	are_u_dead(t_phylo *philo)
 {
-	int flag;
+	int	flag;
 
 	flag = 0;
 	pthread_mutex_lock(&philo->info->mutex_dead);

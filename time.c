@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 21:33:14 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/04 21:18:12 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 12:38:59 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ void	delayer(t_phylo *philo)
 	time_left = philo->info->t_die
 		- (dif_time(philo->info) - philo->t_last_eat);
 	time_left /= 2;
+	if (time_left > philo->info->t_die || time_left > 1000)
+		return ;
 	usleep(time_left);
 }

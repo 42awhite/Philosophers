@@ -6,7 +6,7 @@
 /*   By: ablanco- <ablanco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 19:42:00 by ablanco-          #+#    #+#             */
-/*   Updated: 2024/03/04 20:31:21 by ablanco-         ###   ########.fr       */
+/*   Updated: 2024/03/16 13:10:48 by ablanco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ typedef struct s_info
 	long			t_eat;
 	long			t_sleep;
 	int				n_meal;
-	int				*forks;
 	long			start;
 	int				death;
 	int				n_end_eat;
@@ -63,14 +62,13 @@ int		parse(int argc, char **argv);
 int		save_arg(char **argv, int argc, t_info *info);
 int		check_all_ok(int argc, char **argv, t_info *info, t_phylo **philos);
 //Init
-int		do_fork(t_info *info);
 int		do_philos(t_phylo **philos, t_info *info);
 //end
 int		check_n_eats(t_phylo *philo);
 void	check_death(t_phylo *philo, t_info *info);
 int		are_u_dead(t_phylo *philo);
 //rutine
-void	take_forks(t_phylo *philo);
+//void	take_forks(t_phylo *philo);
 int		eat(t_phylo *philo);
 void	nap(t_phylo *philo);
 void	*rutine(void *argv);
